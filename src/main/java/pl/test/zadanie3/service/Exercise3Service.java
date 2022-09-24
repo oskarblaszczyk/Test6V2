@@ -36,7 +36,7 @@ public class Exercise3Service {
             for (Path p : path) {
                 searchFiles(p);
             }
-        } else if (path.endsWith("java")) {
+        } else if (path.toString().toLowerCase().endsWith(".java")) {
             fileDao.save(new WorkspaceFile(
                     attr.toString(),
                     path.toString(),
