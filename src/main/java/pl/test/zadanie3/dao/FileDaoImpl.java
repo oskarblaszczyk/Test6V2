@@ -4,6 +4,7 @@ import pl.test.zadanie3.model.WorkspaceFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
 
 public class FileDaoImpl implements FileDao{
     private EntityManagerFactory factory;
@@ -21,7 +22,12 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public WorkspaceFile load(Long id) {
+    public WorkspaceFile load(String path) {
+        return null;
+    }
+
+    @Override
+    public List<WorkspaceFile> loadAll() {
         return null;
     }
 

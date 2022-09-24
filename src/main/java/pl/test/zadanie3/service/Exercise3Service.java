@@ -19,6 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.util.*;
 
 
 public class Exercise3Service {
@@ -41,11 +44,29 @@ public class Exercise3Service {
                     attr.toString(),
                     path.toString(),
                     attr.size(),
-                    attr.creationTime(),
-                    attr.lastModifiedTime()
+                    attr.creationTime().toInstant(),
+                    attr.lastModifiedTime().toInstant()
             ));
         }
-
     }
+
+    public WorkspaceFile getLastModifiedFile(){
+        return Optional.ofNullable(fileDao.loadAll())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .max(Comparator.comparing(WorkspaceFile::getLastModified))
+                .orElseThrow();
+    }
+
+    public long countLastModifiedFiles(Instant fileTime){
+        return Optional.ofNullable(fileDao.loadAll())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(f -> f.getLastModified().isBefore(fileTime))
+                .count();
+    }
+
 
 }
