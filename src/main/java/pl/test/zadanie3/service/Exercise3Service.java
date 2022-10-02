@@ -11,27 +11,62 @@ nastepnie napisz metode ktora na podstawie tego co jest w bazie znajdzie:
  */
 
 
-import java.io.File;
+import pl.test.zadanie3.dao.FileDaoImpl;
+import pl.test.zadanie3.model.WorkspaceFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.util.*;
+
 
 public class Exercise3Service {
     private Path path;
+    private FileDaoImpl fileDao;
 
-    public Exercise3Service(Path path) {
-        this.path = path;
+    public Exercise3Service(String path, FileDaoImpl fileDao) {
+        this.path = Paths.get(path);
+        this.fileDao = fileDao;
     }
 
-    private void searchFiles(File file){
-        for (File listFile : file.listFiles()) {
-            if(listFile.isDirectory()){
-                searchFiles(listFile);
-            }else{
-
+    private void searchFiles(Path path) throws IOException {
+        BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+        if (attr.isDirectory()) {
+            for (Path p : path) {
+                searchFiles(p);
             }
-
+        } else if (path.toString().toLowerCase().endsWith(".java")) {
+            fileDao.save(new WorkspaceFile(
+                    attr.toString(),
+                    path.toString(),
+                    attr.size(),
+                    attr.creationTime().toInstant(),
+                    attr.lastModifiedTime().toInstant()
+            ));
         }
-
-
     }
+
+    public WorkspaceFile getLastModifiedFile(){
+        return Optional.ofNullable(fileDao.loadAll())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .max(Comparator.comparing(WorkspaceFile::getLastModified))
+                .orElseThrow();
+    }
+
+    public long countLastModifiedFiles(Instant fileTime){
+        return Optional.ofNullable(fileDao.loadAll())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(f -> f.getLastModified().isBefore(fileTime))
+                .count();
+    }
+
 
 }
