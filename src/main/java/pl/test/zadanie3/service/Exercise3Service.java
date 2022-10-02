@@ -35,16 +35,16 @@ public class Exercise3Service {
     }
 
     public void searchFiles(File file) throws IOException {
-        BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 searchFiles(f);
             }
         } else if (file.toString().toLowerCase().endsWith(".java")) {
+            BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             fileDao.save(new WorkspaceFile(
                     file.getName(),
-                    file.toString(),
-                    file.getTotalSpace(),
+                    file.getPath(),
+                    attr.size(),
                     attr.creationTime().toInstant(),
                     attr.lastModifiedTime().toInstant()
             ));
