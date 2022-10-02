@@ -14,6 +14,7 @@ nastepnie napisz metode ktora na podstawie tego co jest w bazie znajdzie:
 import pl.test.zadanie3.dao.FileDaoImpl;
 import pl.test.zadanie3.model.WorkspaceFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,17 +34,17 @@ public class Exercise3Service {
         this.fileDao = fileDao;
     }
 
-    private void searchFiles(Path path) throws IOException {
-        BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
-        if (attr.isDirectory()) {
-            for (Path p : path) {
-                searchFiles(p);
+    public void searchFiles(File file) throws IOException {
+        BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+        if (file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                searchFiles(f);
             }
-        } else if (path.toString().toLowerCase().endsWith(".java")) {
+        } else if (file.toString().toLowerCase().endsWith(".java")) {
             fileDao.save(new WorkspaceFile(
-                    attr.toString(),
-                    path.toString(),
-                    attr.size(),
+                    file.getName(),
+                    file.toString(),
+                    file.getTotalSpace(),
                     attr.creationTime().toInstant(),
                     attr.lastModifiedTime().toInstant()
             ));
@@ -64,7 +65,7 @@ public class Exercise3Service {
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)
-                .filter(f -> f.getLastModified().isBefore(fileTime))
+                .filter(f -> f.getLastModified().isAfter(fileTime))
                 .count();
     }
 
