@@ -2,12 +2,13 @@ package pl.test.zadanie1;
 
 import org.junit.Before;
 import org.junit.Test;
+import pl.test.zadanie1.BinarySearch;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BinarySearchTest {
     private BinarySearch bs;
-    private int[] testArray = {1,2,3,4,5,6,7,8,9};
+    private final int[] testArray = {1,2,3,4,5,6,7,8,9};
 
     @Before
     public void init(){
