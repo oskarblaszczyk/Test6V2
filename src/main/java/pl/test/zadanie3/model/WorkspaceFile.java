@@ -3,9 +3,7 @@ package pl.test.zadanie3.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.nio.file.attribute.FileTime;
 import java.time.Instant;
-import java.time.LocalDate;
 
 @Entity
 public class WorkspaceFile {
@@ -26,7 +24,6 @@ public class WorkspaceFile {
     }
 
     public WorkspaceFile() {
-
     }
 
     public String getFileName() {
@@ -47,5 +44,16 @@ public class WorkspaceFile {
 
     public Instant getLastModified() {
         return lastModified;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkspaceFile{" +
+                "fileName='" + fileName + '\'' +
+                ", path='" + path + '\'' +
+                ", size=" + size +
+                ", created=" + created +
+                ", lastModified=" + lastModified +
+                '}';
     }
 }

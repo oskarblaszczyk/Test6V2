@@ -17,10 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 public class Exercise3Service {
@@ -47,8 +44,8 @@ public class Exercise3Service {
         }
     }
 
-    public WorkspaceFile getLastModifiedFile() {
-        return Optional.ofNullable(fileDao.loadAll())
+    public WorkspaceFile getLastModifiedFile(List<WorkspaceFile> workspaceFileList) {
+        return Optional.ofNullable(workspaceFileList)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)
@@ -56,8 +53,8 @@ public class Exercise3Service {
                 .orElseThrow();
     }
 
-    public long countLastModifiedFiles(Instant lastTime) {
-        return Optional.ofNullable(fileDao.loadAll())
+    public long countLastModifiedFiles(List<WorkspaceFile> workspaceFileList, Instant lastTime) {
+        return Optional.ofNullable(workspaceFileList)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)

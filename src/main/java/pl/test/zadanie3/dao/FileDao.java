@@ -12,5 +12,6 @@ public interface FileDao {
 
     List<WorkspaceFile> loadAll();
 
+    public List<WorkspaceFile> loadMax();
     void cleanUp();
 }
